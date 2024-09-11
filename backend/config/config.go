@@ -8,7 +8,6 @@ import (
 	"github.com/joho/godotenv"
 )
 
-// LoadEnv loads environment variables from the .env file
 func LoadEnv() {
 	err := godotenv.Load("/Users/batuhanrapata/Desktop/go/backend/.env")
 	if err != nil {
@@ -16,7 +15,6 @@ func LoadEnv() {
 	}
 }
 
-// GetDBConn returns the database connection string
 func GetDBConn() string {
 	dbHost := os.Getenv("DB_HOST")
 	dbUser := os.Getenv("DB_USER")

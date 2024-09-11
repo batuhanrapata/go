@@ -33,9 +33,8 @@ func (r *repository) Get(id uint) (*casestudy.CaseStudy, error) {
 }
 
 func (r *repository) GetAll() ([]*casestudy.CaseStudy, error) {
-	var cs []*casestudy.CaseStudy // Slice of pointers to CaseStudy
+	var cs []*casestudy.CaseStudy
 
-	// Veritabanından tüm CaseStudy'leri çekiyoruz
 	if err := r.db.Find(&cs).Error; err != nil {
 		return nil, err
 	}

@@ -1,6 +1,7 @@
 package casestudy
 
 import (
+	storage "backend/internal/firebase"
 	"backend/pkg/casestudy"
 	"encoding/json"
 	"net/http"
@@ -15,6 +16,7 @@ func NewRouter(db *gorm.DB) *mux.Router {
 	service := NewService(repo)
 	router := mux.NewRouter()
 
+	router.HandleFunc("/upload", uploadImage).Methods("POST")
 	router.HandleFunc("/casestudy", createCaseStudy(service)).Methods("POST")
 	router.HandleFunc("/casestudy/getall", getAllCaseStudy(service)).Methods("GET")
 	router.HandleFunc("/casestudy/{id}", getCaseStudy(service)).Methods("GET")
@@ -74,4 +76,28 @@ func getAllCaseStudy(s Service) http.HandlerFunc {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 		}
 	}
+}
+
+func uploadImage(w http.ResponseWriter, r *http.Request) {
+	file, _, err := r.FormFile("file")
+	if err != nil {
+		http.Error(w, "Unable to retrieve file", http.StatusBadRequest)
+		return
+	}
+	defer file.Close()
+
+	fileName := r.FormValue("fileName")
+	if fileName == "" {
+		http.Error(w, "File name is required", http.StatusBadRequest)
+		return
+	}
+
+	imageURL, err := storage.UploadImage(file, fileName)
+	if err != nil {
+		http.Error(w, "Failed to upload image", http.StatusInternalServerError)
+		return
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(map[string]string{"imageURL": imageURL})
 }
