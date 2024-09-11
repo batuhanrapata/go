@@ -94,7 +94,7 @@ func uploadImage(w http.ResponseWriter, r *http.Request) {
 
 	imageURL, err := storage.UploadImage(file, fileName)
 	if err != nil {
-		http.Error(w, "Failed to upload image", http.StatusInternalServerError)
+		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
 

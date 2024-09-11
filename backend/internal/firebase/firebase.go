@@ -6,6 +6,8 @@ import (
 	"io"
 	"net/url"
 	"path/filepath"
+	"strings"
+	"time"
 
 	firebase "firebase.google.com/go/v4"
 	"firebase.google.com/go/v4/storage"
@@ -44,7 +46,20 @@ func UploadImage(file io.Reader, fileName string) (string, error) {
 		return "", fmt.Errorf("failed to get bucket: %v", err)
 	}
 
-	filePath := filepath.Join("uploads", fileName)
+	uniqueFileName := fileName
+	for {
+		obj := bucket.Object(filepath.Join("uploads", uniqueFileName))
+		_, err := obj.Attrs(ctx)
+		if err == nil {
+			uniqueFileName = fmt.Sprintf("%s_%d", fileName, time.Now().UnixNano())
+		} else if err != nil && !isNotFoundError(err) {
+			return "", fmt.Errorf("failed to check if file exists: %v", err)
+		} else {
+			break
+		}
+	}
+
+	filePath := filepath.Join("uploads", uniqueFileName)
 	wc := bucket.Object(filePath).NewWriter(ctx)
 	if _, err := io.Copy(wc, file); err != nil {
 		return "", fmt.Errorf("failed to copy file to writer: %v", err)
@@ -56,4 +71,8 @@ func UploadImage(file io.Reader, fileName string) (string, error) {
 	encodedFilePath := url.QueryEscape(filePath)
 	url := fmt.Sprintf("https://firebasestorage.googleapis.com/v0/b/%s/o/%s?alt=media", "firestorage-45220.appspot.com", encodedFilePath)
 	return url, nil
+}
+
+func isNotFoundError(err error) bool {
+	return strings.Contains(err.Error(), "object doesn't exist")
 }
