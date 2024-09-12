@@ -9,5 +9,5 @@ frontend projesi böyle çalıştırılmalı
 
 ```bash
 docker build -t my-react-app .
-docker run -p 80:80 my-react-app
+docker run -p 80:3000 my-react-app
 ```
