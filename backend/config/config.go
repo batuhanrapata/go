@@ -9,7 +9,7 @@ import (
 )
 
 func LoadEnv() {
-	err := godotenv.Load("/Users/batuhanrapata/Desktop/go/backend/.env")
+	err := godotenv.Load("./.env")
 	if err != nil {
 		log.Fatalf("Error loading .env file: %v", err)
 	}

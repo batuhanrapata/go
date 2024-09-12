@@ -19,7 +19,7 @@ var StorageClient *storage.Client
 
 func InitFirebase() error {
 	ctx := context.Background()
-	opt := option.WithCredentialsFile("/Users/batuhanrapata/Desktop/go/backend/firestorage-45220-firebase-adminsdk-eiqhg-1f718a9e75.json") // JSON dosyasının yolu
+	opt := option.WithCredentialsFile("./firestorage-45220-firebase-adminsdk-eiqhg-1f718a9e75.json") // JSON dosyasının yolu
 
 	app, err := firebase.NewApp(ctx, nil, opt)
 	if err != nil {
