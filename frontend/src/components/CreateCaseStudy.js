@@ -1,23 +1,22 @@
-// src/components/CaseStudyForm.js
-
 import React, { useState } from 'react';
 import axios from 'axios';
 import config from '../config/config';
-import '../styles/CreateCaseStudy.css'; 
+import '../styles/CreateCaseStudy.css';
+import Navbar from './NavBar';
 
-const CaseStudyForm = () => {
+
+const CreateCaseStudy = () => {
   const [title, setTitle] = useState('');
   const [header, setHeader] = useState('');
   const [description, setDescription] = useState('');
   const [file, setFile] = useState(null);
   const [imageURL, setImageURL] = useState('');
-  const [previewImage, setPreviewImage] = useState(''); 
+  const [previewImage, setPreviewImage] = useState('');
 
   const handleFileChange = (e) => {
     const selectedFile = e.target.files[0];
     setFile(selectedFile);
 
-    // Resim URL'sini oluştur ve önizleme için ayarla
     if (selectedFile) {
       const previewURL = URL.createObjectURL(selectedFile);
       setPreviewImage(previewURL);
@@ -41,10 +40,8 @@ const CaseStudyForm = () => {
           },
         });
 
-        console.log('Upload response:', response.data);
-
         uploadedImageURL = response.data.imageURL || '';
-        setImageURL(uploadedImageURL); 
+        setImageURL(uploadedImageURL);
       } catch (error) {
         console.error("Failed to upload image:", error);
         return;
@@ -59,58 +56,59 @@ const CaseStudyForm = () => {
         imageuri: uploadedImageURL,
       });
 
-      console.log('Create response:', response.data);
-
-      alert('Created successfully!');
+      alert('Case study created successfully!');
     } catch (error) {
-      console.error("Failed to create :", error);
+      console.error("Failed to create case study:", error);
     }
   };
 
   return (
-    <form onSubmit={handleUploadAndSubmit}>
-      <div>
-        <label>Title:</label>
-        <input
-          type="text"
-          value={title}
-          onChange={(e) => setTitle(e.target.value)}
-          required
-        />
-      </div>
-      <div>
-        <label>Header:</label>
-        <input
-          type="text"
-          value={header}
-          onChange={(e) => setHeader(e.target.value)}
-          required
-        />
-      </div>
-      <div>
-        <label>Description:</label>
-        <textarea
-          value={description}
-          onChange={(e) => setDescription(e.target.value)}
-          required
-        />
-      </div>
-      <div>
-        <label>Image:</label>
-        <input
-          type="file"
-          onChange={handleFileChange}
-        />
-      </div>
-      {previewImage && (
-        <div>
-          <p>Selected Image:</p>
-          <img src={previewImage} alt="Preview" style={{ maxWidth: '200px', maxHeight: '200px' }} />
+    <div className="form-container">
+      <h2>Create Case Study</h2>
+      <form onSubmit={handleUploadAndSubmit}>
+        <div className="form-group">
+          <label>Title:</label>
+          <input
+            type="text"
+            value={title}
+            onChange={(e) => setTitle(e.target.value)}
+            required
+          />
         </div>
-      )}
-      <button type="submit">Create</button>
-    </form>
+        <div className="form-group">
+          <label>Header:</label>
+          <input
+            type="text"
+            value={header}
+            onChange={(e) => setHeader(e.target.value)}
+            required
+          />
+        </div>
+        <div className="form-group">
+          <label>Description:</label>
+          <textarea
+            value={description}
+            onChange={(e) => setDescription(e.target.value)}
+            required
+          />
+        </div>
+        <div className="form-group">
+          <label>Image:</label>
+          <input
+            type="file"
+            onChange={handleFileChange}
+          />
+        </div>
+        {previewImage && (
+          <div className="image-preview">
+            <p>Selected Image:</p>
+            <img src={previewImage} alt="Preview" />
+          </div>
+        )}
+        <button type="submit" className="button">Create</button>
+      </form>
+    </div>
   );
 };
 
-export default CaseStudyForm;
+export default CreateCaseStudy;

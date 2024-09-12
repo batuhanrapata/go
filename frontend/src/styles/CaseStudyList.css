@@ -1,0 +1,92 @@
+/* Reset default styles */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+  
+  .case-study-list {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 25px;
+    padding: 30px;
+    background-color: #f0f2f5;
+  }
+  
+  .case-study-card {
+    background-color: #ffffff;
+    border: none;
+    border-radius: 12px;
+    padding: 20px;
+    max-width: 280px;
+    text-align: center;
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s, box-shadow 0.3s;
+    cursor: pointer;
+  }
+  
+  .case-study-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 10px 18px rgba(0, 0, 0, 0.2);
+  }
+  
+  .case-study-card h2 {
+    font-size: 1.6em;
+    margin-bottom: 12px;
+    color: #2c3e50;
+    font-weight: 700;
+  }
+  
+  .case-study-card h3 {
+    font-size: 1.3em;
+    color: #7f8c8d;
+    margin-bottom: 8px;
+    font-weight: 600;
+  }
+  
+  .case-study-card p {
+    font-size: 1.1em;
+    color: #95a5a6;
+    margin-bottom: 15px;
+    line-height: 1.5;
+  }
+  
+  .case-study-image {
+    margin-top: 15px;
+    max-width: 100%;
+    height: auto;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s;
+  }
+  
+  .case-study-card:hover .case-study-image {
+    transform: scale(1.05);
+  }
+  
+  /* Responsive Styles */
+  @media (max-width: 768px) {
+    .case-study-list {
+      flex-direction: column;
+      padding: 15px;
+    }
+  
+    .case-study-card {
+      max-width: 100%;
+      padding: 15px;
+    }
+  
+    .case-study-card h2 {
+      font-size: 1.4em;
+    }
+  
+    .case-study-card h3 {
+      font-size: 1.2em;
+    }
+  
+    .case-study-card p {
+      font-size: 1em;
+    }
+  }
+  
