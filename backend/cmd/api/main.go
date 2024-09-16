@@ -2,35 +2,46 @@ package main
 
 import (
 	"backend/config"
-	service "backend/internal/casestudy"
+	"backend/internal/casestudy"
+	transport "backend/internal/casestudy/transport"
 	"backend/internal/firebase"
-	"backend/pkg/casestudy"
-	"log"
+	model "backend/pkg/casestudy"
 	"net/http"
+	"os"
 
+	"github.com/go-kit/log"
+	"github.com/go-kit/log/level"
+	"github.com/gorilla/handlers"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
-	"github.com/gorilla/handlers"
 )
 
 func main() {
+	logger := log.NewLogfmtLogger(log.NewSyncWriter(os.Stderr))
+	logger = log.With(logger, "caller", log.DefaultCaller)
+
 	config.LoadEnv()
 
 	err := firebase.InitFirebase()
 	if err != nil {
-		log.Fatal("Firebase initialization failed:", err)
+		level.Error(logger).Log("msg", "Firebase initialization failed", "err", err)
+		os.Exit(1)
 	}
 
 	dbConn := config.GetDBConn()
-
 	db, err := gorm.Open(postgres.Open(dbConn), &gorm.Config{})
 	if err != nil {
-		log.Fatal("Database connection failed:", err)
+		level.Error(logger).Log("msg", "Database connection failed", "err", err)
+		os.Exit(1)
 	}
 
-	db.AutoMigrate(&casestudy.CaseStudy{})
+	db.AutoMigrate(&model.CaseStudy{})
 
-	router := service.NewRouter(db)
+	repository := casestudy.NewRepository(db)
+	service := casestudy.NewService(repository)
+	endpoints := casestudy.MakeEndpoints(service)
+
+	httpHandler := transport.NewHTTPHandler(endpoints, logger)
 
 	// CORS ayarlarını yapılandır
 	corsHeaders := handlers.AllowedHeaders([]string{"X-Requested-With", "Content-Type", "Authorization"})
@@ -40,6 +51,10 @@ func main() {
 	// CORS middleware'ini router'a ekleyin
 	corsHandler := handlers.CORS(corsHeaders, corsOrigins, corsMethods)
 
-	log.Println("API is running on port 8080")
-	http.ListenAndServe(":8080", corsHandler(router))
+	// HTTP sunucusunu başlat
+	http.Handle("/", corsHandler(httpHandler))
+	level.Info(logger).Log("msg", "HTTP server is running", "port", "8080")
+	http.ListenAndServe(":8080", nil)
+	
+
 }

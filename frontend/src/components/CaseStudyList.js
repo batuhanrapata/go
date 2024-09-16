@@ -11,7 +11,7 @@ const CaseStudyList = () => {
   useEffect(() => {
     const fetchCaseStudies = async () => {
       try {
-        const response = await axios.get(`${config.API_BASE_URL}/casestudy/getall`);
+        const response = await axios.get(`${config.API_BASE_URL}/case-studies`);
         setCaseStudies(response.data);
       } catch (error) {
         console.error('Failed to fetch case studies:', error);

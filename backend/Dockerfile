@@ -26,18 +26,15 @@ COPY --from=go-builder /app/main .
 VOLUME /root/uploads /root/uploads
 
 # PostgreSQL için gerekli ortam değişkenlerini ayarla
-ENV DB_HOST=postgres-db
-ENV DB_PORT=5439
 ENV DB_USER=postgres
-ENV DB_PASSWORD=123qwe
+ENV DB_PASSWORD=depixen-pass
 ENV DB_NAME=postgres
+ENV DB_HOST=host.docker.internal
+ENV DB_PORT=5439
 
 # Gerekli dosyayı kopyala
 COPY firestorage-45220-firebase-adminsdk-eiqhg-1f718a9e75.json /root/
 COPY .env /root/
-
-# Uygulamayı dinleyecek portu aç
-EXPOSE 8080
 
 # Uygulamayı başlat
 CMD ["./main"]

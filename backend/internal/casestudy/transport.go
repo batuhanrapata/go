@@ -26,13 +26,15 @@ func NewRouter(db *gorm.DB) *mux.Router {
 
 func createCaseStudy(s Service) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
+		ctx := r.Context()
+
 		var cs casestudy.CaseStudy
 		if err := json.NewDecoder(r.Body).Decode(&cs); err != nil {
 			http.Error(w, err.Error(), http.StatusBadRequest)
 			return
 		}
 
-		if err := s.Create(&cs); err != nil {
+		if err := s.Create(ctx, &cs); err != nil {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 			return
 		}
@@ -43,14 +45,16 @@ func createCaseStudy(s Service) http.HandlerFunc {
 
 func getCaseStudy(s Service) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
+		ctx := r.Context()
+
 		idStr := mux.Vars(r)["id"]
-		id, err := strconv.ParseUint(idStr, 10, 32) // 10: decimal, 32: bit size
+		id, err := strconv.ParseUint(idStr, 10, 32)
 		if err != nil {
 			http.Error(w, "Invalid ID format", http.StatusBadRequest)
 			return
 		}
 
-		cs, err := s.Get(uint(id))
+		cs, err := s.Get(ctx, uint(id))
 		if err != nil {
 			http.Error(w, err.Error(), http.StatusNotFound)
 			return
@@ -65,7 +69,7 @@ func getCaseStudy(s Service) http.HandlerFunc {
 
 func getAllCaseStudy(s Service) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		cs, err := s.GetAll()
+		cs, err := s.GetAll(r.Context())
 		if err != nil {
 			http.Error(w, err.Error(), http.StatusNotFound)
 			return

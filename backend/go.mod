@@ -4,6 +4,7 @@ go 1.23.0
 
 require (
 	firebase.google.com/go/v4 v4.14.1
+	github.com/go-kit/log v0.2.0
 	github.com/gorilla/mux v1.8.1
 	github.com/joho/godotenv v1.5.1
 	google.golang.org/api v0.197.0
@@ -11,7 +12,7 @@ require (
 	gorm.io/gorm v1.25.12
 )
 
-require google.golang.org/appengine v1.6.8 // indirect
+require github.com/go-logfmt/logfmt v0.5.1 // indirect
 
 require (
 	cloud.google.com/go v0.115.1 // indirect
@@ -22,9 +23,9 @@ require (
 	cloud.google.com/go/iam v1.2.0 // indirect
 	cloud.google.com/go/longrunning v0.6.0 // indirect
 	cloud.google.com/go/storage v1.43.0 // indirect
-	firebase.google.com/go v3.13.0+incompatible
 	github.com/MicahParks/keyfunc v1.9.0 // indirect
 	github.com/felixge/httpsnoop v1.0.4 // indirect
+	github.com/go-kit/kit v0.13.0
 	github.com/go-logr/logr v1.4.2 // indirect
 	github.com/go-logr/stdr v1.2.2 // indirect
 	github.com/golang-jwt/jwt/v4 v4.5.0 // indirect
